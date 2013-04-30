@@ -11,7 +11,7 @@ public class LoginView extends Activity
 	private final String TAG = "InstaLogin";
 	private Intent intent;
 	
-	WebViewClient client = new WebViewClient()
+	WebViewClient webClient = new WebViewClient()
 	{
 
 		public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) 
@@ -49,10 +49,6 @@ public class LoginView extends Activity
 		}
 	};
 	
-	final String CLIENT_ID = "aa5dfb579b78421ca8fef6b150204dc6";
-	final String REDIRECT_URI = "http://instagram.com";
-	String addr = "https://instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=token";
-	String serv_addr = "https://api.instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=code";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -60,10 +56,12 @@ public class LoginView extends Activity
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.insta_login);
+		intent = getIntent();
+		String serv_addr = intent.getStringExtra("loginurl");
 		intent = new Intent(); 
 		WebView webView = (WebView) findViewById(R.id.loginView);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.setWebViewClient(client);
+//		webView.getSettings().setJavaScriptEnabled(true);
+		webView.setWebViewClient(webClient);
 		webView.loadUrl(serv_addr);
 	}
 }

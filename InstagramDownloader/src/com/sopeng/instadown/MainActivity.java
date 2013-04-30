@@ -13,6 +13,7 @@ public class MainActivity extends Activity
 {
 	private final String TAG = "MAIN";
 	private static final int INSTALOGIN = 0;
+	private InstagramAPI api;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -20,7 +21,7 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	
-		// Temp
+		// Temp -- start login activity.
 		Button button = (Button) findViewById(R.id.button1);
 		button.setOnClickListener(new OnClickListener()
 		{
@@ -30,7 +31,20 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(getApplicationContext(), LoginView.class);
+				intent.putExtra("loginurl", InstagramAPI.serv_auth_addr);
 				startActivityForResult(intent, INSTALOGIN);
+			}
+		});
+		
+		Button button2 = (Button) findViewById(R.id.button2);
+		button2.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				// TODO Auto-generated method stub
+				api.getPopular();
 			}
 		});
 	}
@@ -53,9 +67,10 @@ public class MainActivity extends Activity
 				{
 					String codeStr = intent.getStringExtra("code");
 					Log.i(TAG,"coddd "+codeStr);
-					
-					InstagramAPI api = new InstagramAPI();
+					api = new InstagramAPI();
 					api.getAccessToken(codeStr);
+					// 인증이 완료된 상태
+					
 				}
 				break;
 		}
