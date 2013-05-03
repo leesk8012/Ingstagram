@@ -1,8 +1,7 @@
-package com.sopeng.instadown;
+package com.sopeng.instagram.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,57 +16,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.util.Log;
 
-public class InstagramAPI
+public class HTTPReader
 {
-	private static final String TAG = "InstagramAPI";
-
-	private static final String CLIENT_ID = "aa5dfb579b78421ca8fef6b150204dc6";	
-	private static final String CLIENT_SECRET = "d9223750ce304811be17d85c5fb25a9c";
-	private static final String REDIRECT_URI = "http://instagram.com";
-	private static final String YOUR_REDIRECT_URI = "http://instagram.com";
-	
-	public static final String clnt_auth_addr = "https://instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=token";
-	public static final String serv_auth_addr = "https://api.instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=code";
-	
-	private String accessToken;
+	private final String TAG = "HTTPReader";
 	
 	/**
-	 * Code 를 통해서 Access Token 얻음.
-	 * @param code
+	 * HTTP Get
+	 * @param url
+	 * @return
 	 */
-	public void getAccessToken(String code)
-	{
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("client_id",CLIENT_ID);
-		params.put("client_secret",CLIENT_SECRET);
-	    params.put("grant_type","authorization_code");
-	    params.put("redirect_uri",YOUR_REDIRECT_URI);
-	    params.put("code",code);
-	    String temp = this.post("https://api.instagram.com/oauth/access_token", params);
-	    
-	    try
-		{
-			JSONObject jsonObject = new JSONObject(temp);
-			accessToken = jsonObject.getString("access_token");
-		}
-		catch (JSONException e)
-		{
-			Log.e(TAG,e.getMessage(),e);
-		}
-	    Log.i(TAG, "Access Token = "+accessToken);
-	}
-	
-	public void getPopular()
-	{
-		String data = gets("https://api.instagram.com/v1/media/popular?access_token="+accessToken);
-		Log.i(TAG,"GetPopular \n"+data);
-	}
-	
 	public String gets(String url)
 	{
 		HttpClient client = new DefaultHttpClient();
@@ -118,7 +78,7 @@ public class InstagramAPI
 		}
 		return "error";
 	}
-
+	
 	/**
 	 * POST 하기 위한 NameValuePair 로 변경함.
 	 * @param params

@@ -1,4 +1,6 @@
-package com.sopeng.instadown;
+package com.sopeng.instagram;
+import com.sopeng.instadown.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +15,6 @@ public class LoginView extends Activity
 	
 	WebViewClient webClient = new WebViewClient()
 	{
-
 		public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) 
 		{
 			Log.i(TAG,"onPageStarted "+url);
@@ -60,7 +61,7 @@ public class LoginView extends Activity
 		String serv_addr = intent.getStringExtra("loginurl");
 		intent = new Intent(); 
 		WebView webView = (WebView) findViewById(R.id.loginView);
-//		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptEnabled(true);
 		webView.setWebViewClient(webClient);
 		webView.loadUrl(serv_addr);
 	}

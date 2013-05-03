@@ -1,4 +1,9 @@
-package com.sopeng.instadown;
+package com.sopeng.instagram;
+
+import org.json.JSONException;
+
+import com.sopeng.instadown.R;
+import com.sopeng.instagram.api.InstagramAPI;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,6 +18,8 @@ public class MainActivity extends Activity
 {
 	private final String TAG = "MAIN";
 	private static final int INSTALOGIN = 0;
+	private static final int INSTAPROFILE = 1;
+	
 	private InstagramAPI api;
 	
 	@Override
@@ -21,18 +28,31 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	
+		// 앱 시작시 인증 필요함. -- 웹뷰 로딩전에는 이미지 화면 하나 필요.
+		Intent intent = new Intent(getApplicationContext(), LoginView.class);
+		intent.putExtra("loginurl", InstagramAPI.serv_auth_addr);
+		startActivityForResult(intent, INSTALOGIN);
+		
+		
 		// Temp -- start login activity.
 		Button button = (Button) findViewById(R.id.button1);
 		button.setOnClickListener(new OnClickListener()
 		{
-			
 			@Override
 			public void onClick(View v)
 			{
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getApplicationContext(), LoginView.class);
-				intent.putExtra("loginurl", InstagramAPI.serv_auth_addr);
-				startActivityForResult(intent, INSTALOGIN);
+				try
+				{
+//					api.getSelfFeed();
+					Intent intent = new Intent(getApplicationContext(), InstaProfileView.class);
+					startActivityForResult(intent, INSTAPROFILE);
+				}
+				catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -44,7 +64,15 @@ public class MainActivity extends Activity
 			public void onClick(View v)
 			{
 				// TODO Auto-generated method stub
-				api.getPopular();
+				try
+				{
+					api.getPopularFeed();
+				}
+				catch (JSONException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
