@@ -61,9 +61,12 @@ public class HTTPReader
 		try
 		{
 			HttpPost post = new HttpPost(url);
-			System.out.println("POST : " + post.getURI());
-			List<NameValuePair> paramList = convertParam(params);
-			post.setEntity(new UrlEncodedFormEntity(paramList, encoding));
+//			System.out.println("POST : " + post.getURI());
+			if(params != null)
+			{
+				List<NameValuePair> paramList = convertParam(params);
+				post.setEntity(new UrlEncodedFormEntity(paramList, encoding));
+			}
 			// Handler 에서 구체적으로 실행하는 것이 무엇인지 알아보아야 함.
 			ResponseHandler<String> rh = new BasicResponseHandler();
 			return client.execute(post, rh);

@@ -8,28 +8,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <Button
+        android:id="@+id/button_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/insta_feed" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_popular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="36dp"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="Button" />
+        android:layout_alignLeft="@+id/button_feed"
+        android:layout_alignRight="@+id/button_feed"
+        android:layout_below="@+id/button_feed"
+        android:layout_marginTop="14dp"
+        android:text="@string/insta_popular" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="46dp"
-        android:text="Button" />
+        android:layout_alignLeft="@+id/button_popular"
+        android:layout_alignRight="@+id/button_popular"
+        android:layout_below="@+id/button_popular"
+        android:layout_marginTop="18dp"
+        android:text="@string/insta_profile" />
 
 </RelativeLayout>

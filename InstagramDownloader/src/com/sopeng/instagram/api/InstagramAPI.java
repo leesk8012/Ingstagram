@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sopeng.instagram.api.repo.ProfileRepo;
+import com.sopeng.instagram.api.repo.InstagramMediaRepo;
 
 import android.util.Log;
 
@@ -44,10 +44,8 @@ public class InstagramAPI extends HTTPReader
 		{
 			JSONObject jsonObject = new JSONObject(temp);
 			accessToken = jsonObject.getString("access_token");
-			
-//			printKey(jsonObject);
 			selfJSON = jsonObject.getJSONObject("user");
-			printKey(selfJSON);
+			printKeys(selfJSON);
 		}
 		catch (JSONException e)
 		{
@@ -56,13 +54,42 @@ public class InstagramAPI extends HTTPReader
 	    Log.i(TAG, "Access Token = "+accessToken);
 	}
 	
+	/**
+	 * TODO
+	 * 현재 제일 잘나가는 피드 모음.
+	 * @throws JSONException
+	 */
 	public void getPopularFeed() throws JSONException
 	{
 		String data = gets("https://api.instagram.com/v1/media/popular?access_token="+accessToken);
-//		Log.i(TAG,"GetPopular \n"+data);
-		printKeys(data);
+		JSONObject jsonObject = new JSONObject(data);
+		JSONArray array = jsonObject.getJSONArray("data");
+		int length = array.length();
+		InstagramMediaRepo.getInstance().removeAll();
+		for(int i=0;i<length;i++)
+		{
+			jsonObject = array.getJSONObject(i);
+			if(jsonObject != null)
+			{
+				String id = jsonObject.getJSONObject("user").getString("id");
+				String profile_pic = jsonObject.getJSONObject("user").getString("profile_picture");
+				String thumb = jsonObject.getJSONObject("images").getJSONObject("thumbnail").getString("url");
+				String standard = jsonObject.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
+				String low = jsonObject.getJSONObject("images").getJSONObject("low_resolution").getString("url");
+				
+				// FIXME
+				InstagramMediaRepo.getInstance().addProfile(id, profile_pic, thumb, low, standard);
+				
+//				Log.i(TAG,"-- Image["+i+"]---");
+//				Log.i(TAG,"thumbnail "+thumb);
+//				Log.i(TAG,"standard "+standard);
+//				Log.i(TAG,"low "+low);
+				
+			}
+		}
 	}
 
+	// TODO
 	public void getSelfFeed() throws JSONException
 	{
 		String data = gets("https://api.instagram.com/v1/users/self/feed?access_token="+accessToken);
@@ -71,13 +98,14 @@ public class InstagramAPI extends HTTPReader
 		getData(data);
 	}
 	
-	public void getFollowings() throws JSONException
+	public String[] getFollowings() throws JSONException
 	{
 		String userid, url;
-		String data = gets("https://api.instagram.com/v1/users/"+getUserID()+"/follows?access_token="+accessToken);
+		String data = gets("https://api.instagram.com/v1/users/"+getSelfUserID()+"/follows?access_token="+accessToken);
 		JSONObject jsonObject = new JSONObject(data);
 		JSONArray array = jsonObject.getJSONArray("data");
 		int length = array.length();
+		String [] imageURL = new String[length];
 		for(int i=0;i<length;i++)
 		{
 			jsonObject = array.getJSONObject(i);
@@ -86,14 +114,16 @@ public class InstagramAPI extends HTTPReader
 				userid = jsonObject.getString("id");
 				url = jsonObject.getString("profile_picture");
 				Log.i(TAG,userid+" "+url);
-				ProfileRepo.getInstance().add(userid, url);
+//				ProfileRepo.getInstance().add(userid, url);
+				imageURL[i] = url;
 			}
 		}
+		return imageURL;
 	}
 	
 	
 	//============= HELPER ==============//
-	private String getUserID() throws JSONException
+	private String getSelfUserID() throws JSONException
 	{
 		return selfJSON.getString("id");
 	}
@@ -104,7 +134,7 @@ public class InstagramAPI extends HTTPReader
 		JSONObject jsonObject = new JSONObject(input);
 		JSONArray jsonArray = jsonObject.getJSONArray("data");
 		int length = jsonArray.length();
-		printKey(jsonArray.getJSONObject(0));
+		printKeys(jsonArray.getJSONObject(0));
 		for(int i=0;i<length;i++)
 		{
 			jsonObject = jsonArray.getJSONObject(i);
@@ -113,18 +143,29 @@ public class InstagramAPI extends HTTPReader
 	}
 	
 	// Debug
-	private void printKey(JSONObject jsonObject)
+	private void printKeys(JSONObject jsonObject)
 	{
+		String key;
 		Iterator<?> iterator = jsonObject.keys();
 		while(iterator.hasNext())
 		{
-			Log.i(TAG,"Key "+iterator.next());
+			key = (String) iterator.next();
+			try
+			{
+				jsonObject.getJSONArray(key);
+			}
+			catch (JSONException e)
+			{
+				Log.i(TAG,"Key "+key);
+				continue;		
+			}
+			Log.i(TAG,"Key "+key+" [jsonArray]");
 		}
 	}
 	// Debug
 	private void printKeys(String data) throws JSONException
 	{
 		JSONObject jsonObject = new JSONObject(data);
-		printKey(jsonObject);
+		printKeys(jsonObject);
 	}
 }

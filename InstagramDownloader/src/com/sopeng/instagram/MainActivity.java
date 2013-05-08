@@ -2,11 +2,13 @@ package com.sopeng.instagram;
 
 import org.json.JSONException;
 
-import com.sopeng.instadown.R;
+import com.sopeng.instagram.Constants.Extra;
 import com.sopeng.instagram.api.InstagramAPI;
+import com.sopeng.instagram.api.repo.InstagramMediaRepo;
+import com.sopeng.instagram.imageview.BaseActivity;
+import com.sopeng.instagram.imageview.ImageGridActivity;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +16,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends Activity
+/**
+ * 처음으로 시작하는 Activity.
+ * 
+ * @author leesk
+ *
+ */
+public class MainActivity extends BaseActivity
 {
 	private final String TAG = "MAIN";
 	private static final int INSTALOGIN = 0;
-	private static final int INSTAPROFILE = 1;
 	
 	private InstagramAPI api;
 	
@@ -28,38 +35,38 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	
+		api = new InstagramAPI();
+		// UI 와 분리 필요.
 		// 앱 시작시 인증 필요함. -- 웹뷰 로딩전에는 이미지 화면 하나 필요.
 		Intent intent = new Intent(getApplicationContext(), LoginView.class);
 		intent.putExtra("loginurl", InstagramAPI.serv_auth_addr);
 		startActivityForResult(intent, INSTALOGIN);
 		
-		
-		// Temp -- start login activity.
-		Button button = (Button) findViewById(R.id.button1);
-		button.setOnClickListener(new OnClickListener()
+		// TODO Follow
+		// 팔로잉하는 유저의 프로필 사진
+		Button profileButton = (Button) findViewById(R.id.button_profile);
+		profileButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
 				try
 				{
-//					api.getSelfFeed();
-					Intent intent = new Intent(getApplicationContext(), InstaProfileView.class);
-					startActivityForResult(intent, INSTAPROFILE);
+//					String [] arr = api.getFollowings();
+					Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+//					intent.putExtra(Extra.IMAGES, arr);
+					startActivity(intent);
 				}
 				catch (Exception e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		
-		Button button2 = (Button) findViewById(R.id.button2);
-		button2.setOnClickListener(new OnClickListener()
+		// TODO Popular
+		Button popularButton = (Button) findViewById(R.id.button_popular);
+		popularButton.setOnClickListener(new OnClickListener()
 		{
-			
 			@Override
 			public void onClick(View v)
 			{
@@ -67,11 +74,13 @@ public class MainActivity extends Activity
 				try
 				{
 					api.getPopularFeed();
+					Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+					intent.putExtra(Extra.IMAGES, InstagramMediaRepo.getInstance().getThumbPics());
+					startActivity(intent);
 				}
 				catch (JSONException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(TAG,e.getMessage(),e);
 				}
 			}
 		});
@@ -90,17 +99,21 @@ public class MainActivity extends Activity
 		super.onActivityResult(requestCode, resultCode, intent);	 
 		switch(requestCode)
 		{
-			case INSTALOGIN: // requestCode가 B_ACTIVITY인 케이스
+			case INSTALOGIN:
 				if(resultCode == RESULT_OK)
 				{
 					String codeStr = intent.getStringExtra("code");
-					Log.i(TAG,"coddd "+codeStr);
-					api = new InstagramAPI();
+					Log.i(TAG,"Login Success Code : "+codeStr);
 					api.getAccessToken(codeStr);
-					// 인증이 완료된 상태
-					
 				}
 				break;
 		}
+	}
+	
+	@Override
+	public void onBackPressed() 
+	{
+		imageLoader.stop();
+		super.onBackPressed();
 	}
 }

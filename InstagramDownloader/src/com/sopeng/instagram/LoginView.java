@@ -1,5 +1,4 @@
 package com.sopeng.instagram;
-import com.sopeng.instadown.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +18,7 @@ public class LoginView extends Activity
 		{
 			Log.i(TAG,"onPageStarted "+url);
 		
-			// Access token 얻기.
+			// Access token 얻기. -- client side
 			if(url.contains("#access_token="))
 			{
 				String tmp = url.substring(url.indexOf("#access_token="));
