@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_empty" 
+        android:contentDescription="@string/app_name" />
+
+    <WebView
+        android:id="@+id/dummyWebView"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_weight="1" />
+
+</LinearLayout>

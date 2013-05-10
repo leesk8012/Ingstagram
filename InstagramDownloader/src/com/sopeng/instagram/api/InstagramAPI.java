@@ -17,11 +17,12 @@ public class InstagramAPI extends HTTPReader
 
 	private static final String CLIENT_ID = "aa5dfb579b78421ca8fef6b150204dc6";	
 	private static final String CLIENT_SECRET = "d9223750ce304811be17d85c5fb25a9c";
-	private static final String REDIRECT_URI = "http://instagram.com";
+	public static final String REDIRECT_URI = "http://instagram.com";
 	private static final String YOUR_REDIRECT_URI = "http://instagram.com";
 	
 	public static final String clnt_auth_addr = "https://instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=token";
 	public static final String serv_auth_addr = "https://api.instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=code";
+	public static final String logout_addr = "https://instagram.com/accounts/logout/";
 	
 	public static String accessToken;
 	public static JSONObject selfJSON;
@@ -52,6 +53,11 @@ public class InstagramAPI extends HTTPReader
 			Log.e(TAG,e.getMessage(),e);
 		}
 	    Log.i(TAG, "Access Token = "+accessToken);
+	}
+	
+	public void logout()
+	{
+		gets(logout_addr);
 	}
 	
 	/**

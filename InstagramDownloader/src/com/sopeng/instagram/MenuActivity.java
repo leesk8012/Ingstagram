@@ -8,8 +8,8 @@ import com.sopeng.instagram.api.repo.InstagramMediaRepo;
 import com.sopeng.instagram.imageview.BaseActivity;
 import com.sopeng.instagram.imageview.ImageGridActivity;
 
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,34 +17,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-/**
- * 처음으로 시작하는 Activity.
- * 
- * @author leesk
- *
- */
-public class MainActivity extends BaseActivity
+public class MenuActivity extends BaseActivity
 {
 	private final String TAG = "MAIN";
-	private static final int INSTALOGIN = 0;
-	
 	private InstagramAPI api;
+	private Intent intent;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	
-		
-		
-		api = new InstagramAPI();
-		// UI 와 분리 필요.
-		// 앱 시작시 인증 필요함. -- 웹뷰 로딩전에는 이미지 화면 하나 필요.
-		Intent intent = new Intent(getApplicationContext(), LoginView.class);
-		intent.putExtra("loginurl", InstagramAPI.serv_auth_addr);
-		startActivityForResult(intent, INSTALOGIN);
-		
+		setContentView(R.layout.ac_main_menu);
+		api = new InstagramAPI();		
 		// TODO Follow
 		// 팔로잉하는 유저의 프로필 사진
 		Button profileButton = (Button) findViewById(R.id.button_profile);
@@ -55,9 +39,7 @@ public class MainActivity extends BaseActivity
 			{
 				try
 				{
-//					String [] arr = api.getFollowings();
 					Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
-//					intent.putExtra(Extra.IMAGES, arr);
 					startActivity(intent);
 				}
 				catch (Exception e)
@@ -89,20 +71,37 @@ public class MainActivity extends BaseActivity
 		});
 	}
 
-	
-	public void onActivityResult(int requestCode, int resultCode, Intent intent)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		super.onActivityResult(requestCode, resultCode, intent);	 
-		switch(requestCode)
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// TODO Auto-generated method stub
+		switch(item.getItemId())
 		{
-			case INSTALOGIN:
-				if(resultCode == RESULT_OK)
-				{
-					String codeStr = intent.getStringExtra("code");
-					Log.i(TAG,"Login Success Code : "+codeStr);
-					api.getAccessToken(codeStr);
-				}
+			case R.id.item_logout:
+				intent = new Intent();
+				intent.putExtra("LOG", 1);
+				setResult(RESULT_OK, intent);
+				finish();
+				break;
+			case R.id.item_about_app:
 				break;
 		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	// FIXME
+	@Override
+	public void onBackPressed() 
+	{
+		imageLoader.stop();
+		super.onBackPressed();
 	}
 }

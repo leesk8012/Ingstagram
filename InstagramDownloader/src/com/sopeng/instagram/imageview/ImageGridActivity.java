@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,24 +42,14 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
  */
 public class ImageGridActivity extends AbsListViewBaseActivity
 {
-
 	String[] imageUrls;
-
 	DisplayImageOptions options;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_image_grid);
-
-//		Bundle bundle = getIntent().getExtras();
-//		imageUrls = bundle.getStringArray(Extra.IMAGES);
-		if(imageUrls == null)
-		{
-			new Thread(new loadPictureThread()).start();
-		}
-		
 		
 		options = new DisplayImageOptions.Builder().showStubImage(R.drawable.ic_stub)
 				.showImageForEmptyUri(R.drawable.ic_empty).showImageOnFail(R.drawable.ic_error)
@@ -79,6 +68,26 @@ public class ImageGridActivity extends AbsListViewBaseActivity
 		});
 	}
 
+	@Override
+	public void onResume()
+	{
+		// TODO Auto-generated method stub
+		loadPictureTask pictures = new loadPictureTask();
+		pictures.execute();
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
+	
+	/**
+	 * Detail View.
+	 * @param position
+	 */
 	private void startImagePagerActivity(int position)
 	{
 		Intent intent = new Intent(this, ImagePagerActivity.class);
@@ -130,32 +139,39 @@ public class ImageGridActivity extends AbsListViewBaseActivity
 	}
 
 	private final String TAG = "gridView";
-
 	private ImageAdapter adapter;
-	
-	class loadPictureThread implements Runnable
+		
+	/**
+	 * retrieve a pictures of instagram profile.
+	 * @author leesk
+	 *
+	 */
+	class loadPictureTask extends AsyncTask<Void, Void, Boolean>
 	{
-
 		@Override
-		public void run()
+		protected Boolean doInBackground(Void... arg0)
 		{
-			Looper.prepare();
 			InstagramAPI api = new InstagramAPI();
-			
+			String tempFollow[] = null;
 			try
 			{
-				String tempFollow [] = api.getFollowings();
-				imageUrls = tempFollow;
-				adapter.notifyDataSetChanged();
+				tempFollow = api.getFollowings();
 			}
 			catch (JSONException e)
 			{
 				Log.e(TAG,e.getMessage());
+				return false;
 			}
-			Looper.loop();
+			imageUrls = tempFollow;
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result)
+		{
+			if(result)
+				adapter.notifyDataSetChanged();
+			super.onPostExecute(result);
 		}
 	}
-	
-//	class loadPictures extends AsyncTask<Params, Progress, Result>
-	
 }

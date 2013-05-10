@@ -16,16 +16,22 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sopeng.instagram.MainActivity"
+            android:name="com.sopeng.instagram.StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.sopeng.instagram.LoginView" />
-        <activity android:name="com.sopeng.instagram.InstaProfileView" />
-        <activity android:name="com.sopeng.instagram.imageview.ImageGridActivity" />
-        <activity android:name="com.sopeng.instagram.imageview.ImagePagerActivity" />
+        <activity android:name="com.sopeng.instagram.LoginView" 
+            android:label="Login"/>
+        <activity android:name="com.sopeng.instagram.MenuActivity" 
+            android:label="Ingstagram"/>
+        <activity android:name="com.sopeng.instagram.InstaProfileView" 
+            android:label="Profile"/>
+        <activity android:name="com.sopeng.instagram.imageview.ImageGridActivity" 
+            android:label="GridView"/>
+        <activity android:name="com.sopeng.instagram.imageview.ImagePagerActivity" 
+            android:label="DetailView"/>
 	</application>
 </manifest>

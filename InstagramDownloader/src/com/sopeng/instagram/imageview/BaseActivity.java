@@ -24,6 +24,7 @@ import com.sopeng.instagram.R;
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
+ * @modified by leesk
  */
 public abstract class BaseActivity extends Activity {
 
