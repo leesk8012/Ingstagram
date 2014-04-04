@@ -1,18 +1,13 @@
 package com.sopeng.instagram;
 
-import org.json.JSONException;
-
-import com.sopeng.instagram.Constants.Extra;
-import com.sopeng.instagram.api.InstagramAPI;
-import com.sopeng.instagram.api.repo.InstagramMediaRepo;
-import com.sopeng.instagram.imageview.BaseActivity;
-import com.sopeng.instagram.imageview.ImageGridActivity;
+import com.sopeng.instagram.app.account.LoginView;
+import com.sopeng.instagram.common.api.INLog;
+import com.sopeng.instagram.common.api.InstagramAPI;
+import com.sopeng.instagram.common.imageview.BaseActivity;
+import com.sopeng.instagram.common.imageview.ImageGridActivity;
 
 import android.os.Bundle;
 import android.content.Intent;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,8 +30,6 @@ public class MainActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	
-		
 		
 		api = new InstagramAPI();
 		// UI 와 분리 필요.
@@ -74,22 +67,25 @@ public class MainActivity extends BaseActivity
 			public void onClick(View v)
 			{
 				// TODO Auto-generated method stub
-				try
-				{
-					api.getPopularFeed();
-					Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
-					intent.putExtra(Extra.IMAGES, InstagramMediaRepo.getInstance().getThumbPics());
-					startActivity(intent);
-				}
-				catch (JSONException e)
-				{
-					Log.e(TAG,e.getMessage(),e);
-				}
+//				try
+//				{
+//					// TODO
+//					api.getPopularFeed();
+//					Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+//					intent.putExtra(Extra.IMAGES, InstagramMediaRepo.getInstance().getThumbPics());
+//					startActivity(intent);
+//				}
+//				catch (JSONException e)
+//				{
+//					Log.e(TAG,e.getMessage(),e);
+//				}
 			}
 		});
 	}
 
-	
+	/**
+	 * 로그인 성공일 경우, Key 를 얻음
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
 		super.onActivityResult(requestCode, resultCode, intent);	 
@@ -99,7 +95,7 @@ public class MainActivity extends BaseActivity
 				if(resultCode == RESULT_OK)
 				{
 					String codeStr = intent.getStringExtra("code");
-					Log.i(TAG,"Login Success Code : "+codeStr);
+					INLog.i(TAG,"Login Success Code : "+codeStr);
 					api.getAccessToken(codeStr);
 				}
 				break;

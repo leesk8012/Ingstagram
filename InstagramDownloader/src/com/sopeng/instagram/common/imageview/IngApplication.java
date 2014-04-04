@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.sopeng.instagram.imageview;
+package com.sopeng.instagram.common.imageview;
 
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
-import com.sopeng.instagram.Constants.Config;
+import com.sopeng.instagram.common.imageview.Constants.Config;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;

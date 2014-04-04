@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.sopeng.instagram.imageview;
+package com.sopeng.instagram.common.imageview;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -28,7 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sopeng.instagram.R;
-import com.sopeng.instagram.Constants.Extra;
+import com.sopeng.instagram.common.imageview.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;

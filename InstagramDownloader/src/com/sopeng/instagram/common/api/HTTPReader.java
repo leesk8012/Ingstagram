@@ -1,4 +1,4 @@
-package com.sopeng.instagram.api;
+package com.sopeng.instagram.common.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +17,11 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.util.Log;
-
+/**
+ * HTTP 전송을 위한 클래스.
+ * @author sopeng
+ *
+ */
 public class HTTPReader
 {
 	private final String TAG = "HTTPReader";
@@ -39,11 +42,11 @@ public class HTTPReader
 		}
 		catch (ClientProtocolException e)
 		{
-			Log.e(TAG,e.getMessage(),e);
+			INLog.e(TAG,e.getMessage(),e);
 		}
 		catch (IOException e)
 		{
-			Log.e(TAG,e.getMessage(),e);
+			INLog.e(TAG,e.getMessage(),e);
 		}
 		return "error";
 	}
@@ -73,7 +76,7 @@ public class HTTPReader
 		}
 		catch (Exception e)
 		{
-			Log.e(TAG,e.getMessage(),e);
+			INLog.e(TAG,e.getMessage(),e);
 		}
 		finally
 		{

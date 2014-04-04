@@ -1,4 +1,4 @@
-package com.sopeng.instagram;
+package com.sopeng.instagram.common.imageview;
 
 /*******************************************************************************
  * Copyright 2011-2013 Sergey Tarasevich

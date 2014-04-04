@@ -1,4 +1,4 @@
-package com.sopeng.instagram.api.repo;
+package com.sopeng.instagram.common.api.repo;
 
 import java.util.Vector;
 

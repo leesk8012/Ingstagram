@@ -1,4 +1,4 @@
-package com.sopeng.instagram.api;
+package com.sopeng.instagram.common.api;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,16 +7,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sopeng.instagram.api.repo.InstagramMediaRepo;
+import com.sopeng.instagram.common.api.repo.InstagramMediaRepo;
 
-import android.util.Log;
+import android.os.Handler;
 
 public class InstagramAPI extends HTTPReader
 {
-	private static final String TAG = "InstagramAPI";
-
-	private static final String CLIENT_ID = "aa5dfb579b78421ca8fef6b150204dc6";	
-	private static final String CLIENT_SECRET = "d9223750ce304811be17d85c5fb25a9c";
+	private final String TAG = "InstagramAPI";
+	private static final String CLIENT_ID = "f0c8cfa947474700b085b51c342050c6";	
+	private static final String CLIENT_SECRET = "076c23f972c74b0cbef61cef7588c6af";
 	public static final String REDIRECT_URI = "http://instagram.com";
 	private static final String YOUR_REDIRECT_URI = "http://instagram.com";
 	
@@ -50,9 +49,9 @@ public class InstagramAPI extends HTTPReader
 		}
 		catch (JSONException e)
 		{
-			Log.e(TAG,e.getMessage(),e);
+			INLog.e(TAG,e.getMessage(),e);
 		}
-	    Log.i(TAG, "Access Token = "+accessToken);
+	    INLog.i(TAG, "Access Token = "+accessToken);
 	}
 	
 	public void logout()
@@ -65,7 +64,7 @@ public class InstagramAPI extends HTTPReader
 	 * 현재 제일 잘나가는 피드 모음.
 	 * @throws JSONException
 	 */
-	public void getPopularFeed() throws JSONException
+	public void getPopularFeed(Handler handler) throws JSONException
 	{
 		String data = gets("https://api.instagram.com/v1/media/popular?access_token="+accessToken);
 		JSONObject jsonObject = new JSONObject(data);
@@ -85,6 +84,9 @@ public class InstagramAPI extends HTTPReader
 				
 				// FIXME
 				InstagramMediaRepo.getInstance().addProfile(id, profile_pic, thumb, low, standard);
+				
+				
+				handler.sendMessage(null);
 				
 //				Log.i(TAG,"-- Image["+i+"]---");
 //				Log.i(TAG,"thumbnail "+thumb);
@@ -108,6 +110,7 @@ public class InstagramAPI extends HTTPReader
 	{
 		String userid, url;
 		String data = gets("https://api.instagram.com/v1/users/"+getSelfUserID()+"/follows?access_token="+accessToken);
+		INLog.d(TAG, "data "+data);
 		JSONObject jsonObject = new JSONObject(data);
 		JSONArray array = jsonObject.getJSONArray("data");
 		int length = array.length();
@@ -119,7 +122,7 @@ public class InstagramAPI extends HTTPReader
 			{
 				userid = jsonObject.getString("id");
 				url = jsonObject.getString("profile_picture");
-				Log.i(TAG,userid+" "+url);
+				INLog.i(TAG,userid+" "+url);
 //				ProfileRepo.getInstance().add(userid, url);
 				imageURL[i] = url;
 			}
@@ -131,7 +134,10 @@ public class InstagramAPI extends HTTPReader
 	//============= HELPER ==============//
 	private String getSelfUserID() throws JSONException
 	{
-		return selfJSON.getString("id");
+		if(selfJSON != null)
+			return selfJSON.getString("id");
+		else
+			return null;
 	}
 	
 	
@@ -162,10 +168,10 @@ public class InstagramAPI extends HTTPReader
 			}
 			catch (JSONException e)
 			{
-				Log.i(TAG,"Key "+key);
+				INLog.i(TAG,"Key "+key);
 				continue;		
 			}
-			Log.i(TAG,"Key "+key+" [jsonArray]");
+			INLog.i(TAG,"Key "+key+" [jsonArray]");
 		}
 	}
 	// Debug

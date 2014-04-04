@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.sopeng.instagram.imageview;
+package com.sopeng.instagram.common.imageview;
 
 import org.json.JSONException;
 
@@ -31,8 +31,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.sopeng.instagram.R;
-import com.sopeng.instagram.Constants.Extra;
-import com.sopeng.instagram.api.InstagramAPI;
+import com.sopeng.instagram.common.api.InstagramAPI;
+import com.sopeng.instagram.common.imageview.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**

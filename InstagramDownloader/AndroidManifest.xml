@@ -5,33 +5,37 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="15" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name="com.sopeng.instagram.imageview.IngApplication"
+        android:name="com.sopeng.instagram.common.imageview.IngApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sopeng.instagram.StartActivity"
+            android:name="com.sopeng.instagram.LauncherActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.sopeng.instagram.LoginView" 
+        <activity android:name="com.sopeng.instagram.app.account.LoginView" 
+            android:theme="@android:style/Theme.NoTitleBar"
             android:label="Login"/>
         <activity android:name="com.sopeng.instagram.MenuActivity" 
             android:label="Ingstagram"/>
         <activity android:name="com.sopeng.instagram.InstaProfileView" 
             android:label="Profile"/>
-        <activity android:name="com.sopeng.instagram.imageview.ImageGridActivity" 
+        <activity android:name="com.sopeng.instagram.common.imageview.ImageGridActivity" 
             android:label="GridView"/>
-        <activity android:name="com.sopeng.instagram.imageview.ImagePagerActivity" 
+        <activity android:name="com.sopeng.instagram.common.imageview.ImagePagerActivity" 
             android:label="DetailView"/>
+        
+        <activity android:name="com.sopeng.instagram.app.imageview.ProfilePicsActivity" 
+            android:label="GridView"/>
 	</application>
 </manifest>

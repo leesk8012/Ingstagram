@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.sopeng.instagram.imageview;
+package com.sopeng.instagram.common.imageview;
 
 import android.app.Activity;
 import android.view.Menu;

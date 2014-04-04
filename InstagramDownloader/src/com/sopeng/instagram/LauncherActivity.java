@@ -1,17 +1,19 @@
 package com.sopeng.instagram;
 
-import com.sopeng.instagram.api.InstagramAPI;
+import com.sopeng.instagram.app.account.LoginView;
+import com.sopeng.instagram.common.api.INLog;
+import com.sopeng.instagram.common.api.InstagramAPI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class StartActivity extends Activity
+public class LauncherActivity extends Activity
 {
-	private final String TAG = "Ingstagram StartScreen";
+	private final String TAG = "InstaLauncherActivity";
 	private static final int INSTALOGIN = 0;
 	private static final int INSTAMENU = 1;
 	private WebView webView;
@@ -24,6 +26,8 @@ public class StartActivity extends Activity
 		
 		webView = (WebView) findViewById(R.id.dummyWebView);			
 		webView.setWebViewClient(webClient);
+		
+		// Server side Flow. Step one. 
 		webView.loadUrl(InstagramAPI.serv_auth_addr);
 	}
 	
@@ -50,15 +54,10 @@ public class StartActivity extends Activity
 			case INSTALOGIN:
 				if(resultCode == RESULT_OK)	// Login
 				{
-					InstagramAPI api = new InstagramAPI();
-					String codeStr = intent.getStringExtra("code");
-					
-					Log.i(TAG,"Login Success Code : "+codeStr);
-					// FIXME Thread 로 변경할 필요가 있음. --> AsyncTask.
-					api.getAccessToken(codeStr);
-					// menu 호출.
-					intent = new Intent(getApplicationContext(), MenuActivity.class);
-					startActivityForResult(intent, INSTAMENU);
+					String codeStr = intent.getStringExtra("code");					
+					INLog.i(TAG,"Login Success Code : "+codeStr);
+					AuthTask authTask = new AuthTask();
+					authTask.execute(codeStr);
 				}
 				else	// Exit
 				{
@@ -83,7 +82,7 @@ public class StartActivity extends Activity
 		final String TAG = "StartActivity Web";
 		public void onPageFinished(WebView view, String url) 
 		{
-			Log.i(TAG, "PageFinished "+url);
+			INLog.i(TAG, "PageFinished "+url);
 			if(url.contains("code="))	// Login succeed.
 			{
 				startMenuView(url);
@@ -94,4 +93,24 @@ public class StartActivity extends Activity
 			}
 		}
 	};
+	
+	class AuthTask extends AsyncTask<String, Void, Void>
+	{
+
+		@Override
+		protected Void doInBackground(String... params)
+		{
+			InstagramAPI api = new InstagramAPI();			
+			api.getAccessToken(params[0]);
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+			startActivityForResult(intent, INSTAMENU);
+			super.onPostExecute(result);
+		}
+	}
 }
